@@ -16,35 +16,63 @@ namespace Lab_10
 
         private void PlayB_Click(object sender, EventArgs e)
         {
+            axisDraw();
             CarcassDraw();
         }
-
+        private void textBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char FirstLetter = ((MaskedTextBox)sender).Text[0];
+            if (FirstLetter == '-')
+            {
+                if (!(char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar)))
+                    e.Handled = true;
+            }
+            else
+            {
+                if (!(e.KeyChar == '-' || char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar)))
+                    e.Handled = true;
+            }
+            
+        }
+        private void axisDraw()
+        {
+            Pen Lines = new Pen(Color.Black);
+            GraphicsObj.Clear(Color.White);
+            Font t = new Font(label1.Font.Name, label1.Font.Size, label1.Font.Style);
+            Brush text = new SolidBrush(Color.Black);
+            GraphicsObj.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, 1, 0, 0);
+            GraphicsObj.DrawLine(Lines, 300, 0, 300, 600);
+            GraphicsObj.DrawLine(Lines, 0, 300, 600, 300);
+            for (int i = 1; i < 600 / 50; i++)
+            {
+                GraphicsObj.DrawLine(Lines, i * 50, 302, i * 50, 298);
+                GraphicsObj.DrawLine(Lines, 302, i * 50, 298, i * 50);
+                if (i != 6)
+                {
+                    GraphicsObj.DrawString(Convert.ToString(i * 50 - 300), t, text, i * 50, 310);
+                    GraphicsObj.DrawString(Convert.ToString(-i * 50 + 300), t, text, 270, i * 50);
+                }
+            }
+            GraphicsObj.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, -1, 300, 300);
+        }
         private void CarcassDraw()
         {
             
-            Pen rectPen = new Pen(Color.Black, 3);
+            Pen rectPen = new Pen(Color.Black);
             Pen linePen = new Pen(Color.Red);
-            GraphicsObj.Clear(Color.White);
-            Font t = new Font(label1.Font.FontFamily, 7F);
-            GraphicsObj.DrawLine(new Pen(Color.Black), 15, 210, 15, 10);
-            GraphicsObj.DrawLine(new Pen(Color.Black), 15, 10, 580, 10);
-            for (int i = 1; i < 560 / 40 + 1; i++)
-            {
-                GraphicsObj.DrawLine(new Pen(Color.Black), i * 40 + 10, 7, i * 40 + 10, 13);
-                GraphicsObj.DrawString((i * 40).ToString(), t, new SolidBrush(Color.Black), i * 40 - 12, -2);
-            }
-            for (int i = 1; i < 200 / 40 + 1; i++)
-            {
-                GraphicsObj.DrawLine(new Pen(Color.Black), 12, i * 40, 18, i * 40);
-                GraphicsObj.DrawString((i * 40).ToString(), t, new SolidBrush(Color.Black), 0, i * 40 - 15);
-            }
-
             var coordBoxes = new[] { LUX, LUY, RDX, RDY, P1X, P2X, P1Y, P2Y, };
             foreach (var item in coordBoxes)
             {
                 if (item.Text == "")
                 {
                     MessageBox.Show("Не все координаты были введены");
+                    areaLabel.Text = "";
+                    return;
+                }
+                int coord = Convert.ToInt32(item.Text);
+                if (coord > 200 || coord < -200)
+                {
+                    MessageBox.Show("Одна из координа выходит за предел допустимых значений (-200<X<200)");
                     areaLabel.Text = "";
                     return;
                 }
@@ -58,9 +86,9 @@ namespace Lab_10
             Rectangle rect = new Rectangle
             {
                 X = rectLeftP.X,
-                Y = rectLeftP.Y,
+                Y = rectRightP.Y,
                 Width = rectRightP.X - rectLeftP.X,
-                Height = rectRightP.Y - rectLeftP.Y
+                Height = rectLeftP.Y - rectRightP.Y
             };
             var rectArea = rect.Width * rect.Height;
             var rectXCoords = new[] { rect.Left, rect.Right };
@@ -77,7 +105,7 @@ namespace Lab_10
                 }
                 return false;
             }
-            if (rectLeftP.X<rectRightP.X && rectLeftP.Y<rectRightP.Y)
+            if (rectLeftP.X < rectRightP.X && rectLeftP.Y > rectRightP.Y)
             {
                 if (!(
                     (rectXCoords.Contains(lineP1.X) && InRange(lineP1.Y, rect.Top, rect.Bottom) ||
@@ -98,7 +126,7 @@ namespace Lab_10
                 areaLabel.Text = "";
                 return;
             }
-            
+
             if ((lineP1.Y == rect.Top) && (lineP2.Y == rect.Top) ||
                 (lineP1.Y == rect.Bottom) && (lineP2.Y == rect.Bottom) ||
                 (lineP1.X == rect.Right) && (lineP2.X == rect.Right) ||
@@ -119,11 +147,11 @@ namespace Lab_10
             var linesRectHalfArea = lineRectW * lineRectH / 2;
 
 
-            var topLeftPoint = new Point(rect.Left, rect.Top);
+            var topRightPoint = new Point(rect.Right, rect.Bottom);
             int area = -1;
 
             // 1
-            if (topLeftPoint == lineP1 || topLeftPoint == lineP2)
+            if (topRightPoint == lineP1 || topRightPoint == lineP2)
             {
                 MessageBox.Show("Линия проходит через верхний левый угол");
                 areaLabel.Text = "";
@@ -131,45 +159,54 @@ namespace Lab_10
             } // 2
             else if (lineYMax == rect.Bottom && lineYMin == rect.Top)
             {
-                area = (lineXMin - rect.Left) * rect.Height + linesRectHalfArea;
+                Console.WriteLine("2");
+                Console.WriteLine((lineXMin - rect.Right).ToString());
+                Console.WriteLine(rect.Height.ToString());
+                Console.WriteLine(linesRectHalfArea.ToString());
+                area = Math.Abs((lineXMin - rect.Right) * rect.Height) + linesRectHalfArea;
             } // 3
             else if (lineXMin == rect.Left && lineXMax == rect.Right)
             {
+                Console.WriteLine("3");
                 area = (lineYMin - rect.Top) * rect.Width + linesRectHalfArea;
             } // 4
-            else if (lineXMax == rect.Right)
+            else if (lineXMin == rect.Left)
             {
-
+                Console.WriteLine("4");
                 area = rectArea - linesRectHalfArea;
             } // 5
-            else if (lineXMin == rect.Left && lineYMin == rect.Top)
+            else if (lineXMax == rect.Right && lineYMin == rect.Top)
             {
-                MessageBox.Show("5");
-                area = linesRectHalfArea;
-            } // 6
-            else if (lineXMin == rect.Left && lineYMax == rect.Bottom)
-            {
-                MessageBox.Show("6");
+                Console.WriteLine("5");
                 area = rectArea - linesRectHalfArea;
+                
+            } // 6
+            else if (lineXMax == rect.Right && lineYMax == rect.Bottom)
+            {
+                Console.WriteLine("6");
+                area = linesRectHalfArea;
             }
             areaLabel.Text = area.ToString();
         }
 
         private void image_Paint(object sender, PaintEventArgs e)
         {
-            Font t = new Font(label1.Font.FontFamily, 7F);
-            e.Graphics.DrawLine(new Pen(Color.Black), 15, 210, 15, 10);
-            e.Graphics.DrawLine(new Pen(Color.Black), 15, 10, 580, 10);
-            for (int i = 1; i < 560 / 40 + 1; i++)
+            Pen pen = new Pen(Color.Black);
+            Brush text = new SolidBrush(Color.Black);
+            Font f = new Font(label1.Font.Name, label1.Font.Size, label1.Font.Style);
+            e.Graphics.DrawLine(pen, 300, 0, 300, 600);
+            e.Graphics.DrawLine(pen, 0, 300, 600, 300);
+            for (int i = 1; i < 600 / 50; i++)
             {
-                e.Graphics.DrawLine(new Pen(Color.Black), i * 40 + 10, 7, i * 40 + 10, 13);
-                e.Graphics.DrawString((i * 40).ToString(), t, new SolidBrush(Color.Black), i * 40 - 12, -2);
+                e.Graphics.DrawLine(pen, i * 50, 302, i * 50, 298); 
+                e.Graphics.DrawLine(pen, 302, i * 50, 298, i * 50);
+                if (i != 6)
+                {
+                    e.Graphics.DrawString(Convert.ToString(i * 50 - 300), f, text, i * 50, 310);
+                    e.Graphics.DrawString(Convert.ToString(-i * 50 + 300), f, text, 270, i * 50);
+                }
             }
-            for (int i = 1; i < 200 / 40 + 1; i++)
-            {
-                e.Graphics.DrawLine(new Pen(Color.Black), 12, i * 40, 18, i * 40);
-                e.Graphics.DrawString((i * 40).ToString(), t, new SolidBrush(Color.Black), 0, i * 40 - 15);
-            }
+            e.Graphics.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, 1, 300, 300);
         }
     }
 }
