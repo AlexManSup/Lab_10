@@ -21,18 +21,21 @@ namespace Lab_10
         }
         private void textBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            char FirstLetter = ((MaskedTextBox)sender).Text[0];
-            if (FirstLetter == '-')
+            int l = ((MaskedTextBox)sender).Text.Length;
+            if (l!=0)
             {
-                if (!(char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar)))
-                    e.Handled = true;
+                char FirstLetter = ((MaskedTextBox)sender).Text[0];
+                if (FirstLetter == '-')
+                {
+                    if (!(char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar)))
+                        e.Handled = true;
+                }
+                else
+                {
+                    if (!(e.KeyChar == '-' || char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar)))
+                        e.Handled = true;
+                }
             }
-            else
-            {
-                if (!(e.KeyChar == '-' || char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar)))
-                    e.Handled = true;
-            }
-            
         }
         private void axisDraw()
         {
@@ -153,37 +156,29 @@ namespace Lab_10
             // 1
             if (topRightPoint == lineP1 || topRightPoint == lineP2)
             {
-                MessageBox.Show("Линия проходит через верхний левый угол");
+                MessageBox.Show("Линия проходит через верхний правый угол");
                 areaLabel.Text = "";
                 return;
             } // 2
             else if (lineYMax == rect.Bottom && lineYMin == rect.Top)
             {
-                Console.WriteLine("2");
-                Console.WriteLine((lineXMin - rect.Right).ToString());
-                Console.WriteLine(rect.Height.ToString());
-                Console.WriteLine(linesRectHalfArea.ToString());
                 area = Math.Abs((lineXMin - rect.Right) * rect.Height) + linesRectHalfArea;
             } // 3
             else if (lineXMin == rect.Left && lineXMax == rect.Right)
             {
-                Console.WriteLine("3");
                 area = (lineYMin - rect.Top) * rect.Width + linesRectHalfArea;
             } // 4
             else if (lineXMin == rect.Left)
             {
-                Console.WriteLine("4");
                 area = rectArea - linesRectHalfArea;
             } // 5
             else if (lineXMax == rect.Right && lineYMin == rect.Top)
             {
-                Console.WriteLine("5");
                 area = rectArea - linesRectHalfArea;
                 
             } // 6
             else if (lineXMax == rect.Right && lineYMax == rect.Bottom)
             {
-                Console.WriteLine("6");
                 area = linesRectHalfArea;
             }
             areaLabel.Text = area.ToString();

@@ -183,9 +183,9 @@
             this.label11.Location = new System.Drawing.Point(39, 320);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(104, 13);
+            this.label11.Size = new System.Drawing.Size(63, 13);
             this.label11.TabIndex = 19;
-            this.label11.Text = "Площадь фигуры =";
+            this.label11.Text = "Площадь =";
             // 
             // areaLabel
             // 
@@ -328,7 +328,7 @@
             this.Controls.Add(this.image);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Лабораторная работа №10";
             ((System.ComponentModel.ISupportInitialize)(this.image)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
