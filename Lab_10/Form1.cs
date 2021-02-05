@@ -7,11 +7,11 @@ namespace Lab_10
 {
     public partial class Form1 : Form
     {
-        Graphics GraphicsObj;
+        public static Bitmap s = new Bitmap(600, 600);
+        public Graphics GraphicsObj = Graphics.FromImage(s);
         public Form1()
         {
             InitializeComponent();
-            GraphicsObj = image.CreateGraphics();
         }
 
         private void PlayB_Click(object sender, EventArgs e)
@@ -141,6 +141,7 @@ namespace Lab_10
             }
             GraphicsObj.DrawLine(linePen, lineP1, lineP2);
             GraphicsObj.DrawRectangle(rectPen, rect);
+            image.Image = s;
             var lineXMin = Math.Min(lineP1.X, lineP2.X);
             var lineXMax = Math.Max(lineP1.X, lineP2.X);
             var lineYMin = Math.Min(lineP1.Y, lineP2.Y);
@@ -165,7 +166,7 @@ namespace Lab_10
             } // 2
             else if (lineYMax == rect.Bottom && lineYMin == rect.Top)
             {
-                area = Math.Abs((lineXMin - rect.Right) * rect.Height) + linesRectHalfArea;
+                area = Math.Abs((lineXMax - rect.Right) * rect.Height) + linesRectHalfArea;
             } // 3
             else if (lineXMin == rect.Left && lineXMax == rect.Right)
             {
@@ -177,8 +178,7 @@ namespace Lab_10
             } // 5
             else if (lineXMax == rect.Right && lineYMin == rect.Top)
             {
-                area = rectArea - linesRectHalfArea;
-                
+                area = rectArea - linesRectHalfArea;  
             } // 6
             else if (lineXMax == rect.Right && lineYMax == rect.Bottom)
             {
