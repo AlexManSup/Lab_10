@@ -152,13 +152,13 @@ namespace Lab_10
 
             var topRightPoint = new Point(rect.Right, rect.Bottom);
             int area = -1;
-
+            label3.Visible = false;
             // 1
             if (topRightPoint == lineP1 || topRightPoint == lineP2)
             {
-                MessageBox.Show("Линия проходит через верхний правый угол");
-                areaLabel.Text = "";
-                return;
+                area = rect.Height * rect.Width;
+                label3.Visible = true;
+                label3.Text = "Линия проходит через правый \nверхний угол, следовательно берется \nполная площадь прямоугольника";
             } // 2
             else if (lineYMax == rect.Bottom && lineYMin == rect.Top)
             {

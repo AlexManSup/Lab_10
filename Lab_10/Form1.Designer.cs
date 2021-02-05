@@ -52,6 +52,7 @@
             this.P2Y = new System.Windows.Forms.MaskedTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.PlayB = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.image)).BeginInit();
             this.SuspendLayout();
             // 
@@ -297,11 +298,22 @@
             this.PlayB.UseVisualStyleBackColor = true;
             this.PlayB.Click += new System.EventHandler(this.PlayB_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 358);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "label3";
+            this.label3.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 623);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.PlayB);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.P2Y);
@@ -361,6 +373,7 @@
         private System.Windows.Forms.MaskedTextBox P2Y;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button PlayB;
+        private System.Windows.Forms.Label label3;
     }
 }
 
