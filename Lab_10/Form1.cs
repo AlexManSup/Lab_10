@@ -158,7 +158,10 @@ namespace Lab_10
             {
                 area = rect.Height * rect.Width;
                 label3.Visible = true;
-                label3.Text = "Линия проходит через правый \nверхний угол, следовательно берется \nполная площадь прямоугольника";
+                label3.Text = $"Линия проходит через правый \nверхний угол, следовательно берется \n" +
+                    $"полная площадь прямоугольника\n" +
+                    $"Площадь первой фигуры= {rectArea - linesRectHalfArea}\n" +
+                    $"Площадь второй фигуры= {Math.Abs(area- rectArea - linesRectHalfArea)}";
             } // 2
             else if (lineYMax == rect.Bottom && lineYMin == rect.Top)
             {
